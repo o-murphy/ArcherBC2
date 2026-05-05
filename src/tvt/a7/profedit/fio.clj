@@ -459,15 +459,45 @@
     (load-from-fp! *state fp)))
 
 
+(defn- normalize-a7p-payload [^String s]
+  (-> s
+      (string/replace "%25" "%")
+      (string/replace "%2B" "+")
+      (string/replace "%2b" "+")
+      (string/replace "%2F" "/")
+      (string/replace "%2f" "/")
+      (string/replace "%3D" "=")
+      (string/replace "%3d" "=")
+      (string/replace "+" "-")
+      (string/replace "/" "_")
+      (string/replace "=" "")))
+
+
+(defn- parse-a7p-url [^String url]
+  (let [uri (java.net.URI. url)
+        query (.getQuery uri)
+        params (when query
+                 (into {} (map #(let [[k v] (string/split % #"=" 2)] [k v])
+                               (string/split query #"&"))))]
+    {:action (.getHost uri)
+     :params params}))
+
+
 (defn load-from-a7p-url! [*state ^String url]
   (safe-exec!
    (fn []
-     (let [payload (subs url (count "a7p://"))
-           bytes (urlsafe-base64-decode payload)
-           pld (ros/impr! ros/proto-bin-deser bytes)
-           {:keys [profile]} pld]
-       (if pld
-         (do (swap! *state #(assoc % :profile profile))
-             (prof/status-ok! (j18n/resource ::loaded-from-url)))
-         (do (prof/status-err! (j18n/resource ::bad-profile-file))
-             nil))))))
+     (let [{:keys [action params]} (parse-a7p-url url)]
+       (case action
+         "open"
+         (if-let [raw (get params "payload")]
+           (let [payload (normalize-a7p-payload raw)
+                 bytes (urlsafe-base64-decode payload)
+                 pld (ros/impr! ros/proto-bin-deser bytes)
+                 {:keys [profile]} pld]
+             (if pld
+               (do (swap! *state #(assoc % :profile profile))
+                   (prof/status-ok! (j18n/resource ::loaded-from-url)))
+               (do (prof/status-err! (j18n/resource ::bad-profile-file))
+                   nil)))
+           (prof/status-err! "a7p://open: missing payload"))
+         (prof/status-err! (str "a7p://: unknown action: " action))))))
