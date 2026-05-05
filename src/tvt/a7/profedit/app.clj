@@ -15,6 +15,7 @@
    [seesaw.forms :as sf]
    [j18n.core :as j18n]
    [clojure.java.io :as io]
+   [clojure.string :as str]
    [tvt.a7.profedit.fulog :as fu])
   (:gen-class))
 
@@ -257,6 +258,13 @@
    (sc/show! (fr-main))))
 
 
+(defn- show-main-frame-from-url! [url]
+  (sc/invoke-now
+   (fio/load-from-a7p-url! *pa url)
+   (status-check!)
+   (sc/show! (fr-main))))
+
+
 (defn -main [& args]
   (check-for-update)
   (conf/load-config! (fio/get-config-file-path))
@@ -266,7 +274,9 @@
    (conf/set-theme! (conf/get-color-theme))
    (let [farg (first args)]
      (if (and farg (not= farg "--repl"))
-       (let [main-frame (show-main-frame! farg)]
+       (let [main-frame (if (str/starts-with? farg "a7p://")
+                          (show-main-frame-from-url! farg)
+                          (show-main-frame! farg))]
          (sc/invoke-later (fio/start-file-tree-updater-thread
                            (partial mk-firmware-update-dialogue main-frame))))
        (let [open-handle #(if (w/load-from-chooser *pa nil)

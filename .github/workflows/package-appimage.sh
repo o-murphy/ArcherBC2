@@ -96,11 +96,11 @@ cat > "$APPDIR/usr/share/applications/${APP_ID}.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Name=${APP_NAME}
-Exec=AppRun %f
+Exec=AppRun %u
 Icon=${APP_ID}
 Comment=A professional editor for A7P profiles
 Categories=Utility;
-MimeType=application/x-a7p;
+MimeType=application/x-a7p;x-scheme-handler/a7p;
 X-AppImage-Version=${APP_VERSION}
 EOF
 

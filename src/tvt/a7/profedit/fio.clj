@@ -457,3 +457,17 @@
 (defn load-from! [*state ^java.io.File file]
   (let [fp (.getAbsolutePath file)]
     (load-from-fp! *state fp)))
+
+
+(defn load-from-a7p-url! [*state ^String url]
+  (safe-exec!
+   (fn []
+     (let [payload (subs url (count "a7p://"))
+           bytes (urlsafe-base64-decode payload)
+           pld (ros/impr! ros/proto-bin-deser bytes)
+           {:keys [profile]} pld]
+       (if pld
+         (do (swap! *state #(assoc % :profile profile))
+             (prof/status-ok! (j18n/resource ::loaded-from-url)))
+         (do (prof/status-err! (j18n/resource ::bad-profile-file))
+             nil))))))
