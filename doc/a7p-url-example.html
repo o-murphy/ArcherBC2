@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ArcherBC2 — a7p:// URL example</title>
+  <style>
+    body { font-family: sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    code, textarea { font-family: monospace; font-size: 0.85em; }
+    textarea { width: 100%; box-sizing: border-box; }
+    .btn { display: inline-block; margin-top: 0.6rem; padding: 0.4rem 1.2rem;
+           background: #1a6; color: #fff; border-radius: 4px; text-decoration: none;
+           cursor: pointer; border: none; font-size: 1em; }
+    .btn:hover { background: #194; }
+    hr { margin: 2rem 0; }
+  </style>
+</head>
+<body>
+
+<h1>ArcherBC2 — <code>a7p://</code> URL example</h1>
+
+<p>
+  This page demonstrates how to embed a shareable profile link that opens directly
+  in ArcherBC2. The profile data is base64-encoded inside the URL — no server required.
+</p>
+
+<!-- ── Example link ───────────────────────────────────────────────────── -->
+<h2>Example link</h2>
+
+<a class="btn"
+   href="a7p://open?payload=MGIyNGU1OTM2ODViYWUwYTllMTFlMzQ1ZGU2NjEwNGQKiQkKBTUwQk1HEhNIT1JOQURZIEEtTUFYIDc1MEdSGhNIT1JOQURZIEEtTUFYIDc1MEdSIgU1MEJNRyoFNzUwR1IyAQo49ANAqN74________AUhfUNwLWIRDYA9o6Ad4D4ABkE6IATKYAQ-gAf4DqAHMOrAB8RPAAQHKAQgI_wEQAyCQTsoBCwj_ARABGAEgoJwBygELCP8BEAEYAiCw6gHKAQsI_wEQARgDIKCNBtABkE7QAaCcAdABqMMB0AGw6gHQAbiRAtABwLgC0AHI3wLQAdCGA9ABoJYD0AHwpQPQAcC1A9ABkMUD0AHg1APQAbDkA9ABgPQD0AHQgwTQAaCTBNAB8KIE0AHAsgTQAZDCBNAB4NEE0AGw4QTQAYDxBNAB0IAF0AGgkAXQAfCfBdABwK8F0AGQvwXQAeDOBdABsN4F0AGA7gXQAdD9BdABoI0G0AGIlQbQAfCcBtAB2KQG0AHArAbQAai0BtABkLwG0AH4wwbQAeDLBtAByNMG0AGw2wbQAZjjBtABgOsG0AHo8gbQAdD6BtABuIIH0AGgigfQAYiSB9AB8JkH0AHYoQfQAcCpB9ABqLEH0AGQuQfQAfjAB9AB4MgH0AHI0AfQAbDYB9ABmOAH0AGA6AfQAejvB9AB0PcH0AG4_wfQAaCHCNABiI8I0AHwlgjQAdieCNABwKYI0AGorgjQAZC2CNAB-L0I0AHgxQjQAcjNCNABsNUI0AGY3QjQAYDlCNAB6OwI0AHQ9AjQAbj8CNABoIQJ0AGIjAnQAfCTCdAB5JcJ0AHYmwnQAcyfCdABwKMJ0AG0pwnQAairCdABnK8J0AGQswnQAYS3CdAB-LoJ0AHsvgnQAeDCCdAB1MYJ0AHIygnQAbzOCdABsNIJ0AGk1gnQAZjaCdABjN4J0AGA4gnQAfTlCdAB6OkJ0AHc7QnQAdDxCdABxPUJ0AG4-QnQAaz9CdABoIEK0AGUhQrQAYiJCtAB_IwK0AHwkArQAeSUCtAB2JgK0AHMnArQAcCgCtABtKQK0AGoqArQAZysCtABkLAK0AGEtArQAfi3CtAB7LsK0AHgvwrQAdTDCtAByMcK0AG8ywrQAbDPCtABpNMK0AGY1wrQAYzbCtABgN8K0AH04grQAejmCtAB3OoK0AHQ7grQAcTyCtABuPYK0AGs-grQAaD-CtABlIIL0AGIhgvQAfyJC9AB8I0L0AHkkQvQAdiVC9ABzJkL0AHAnQvQAbShC9ABqKUL0AGcqQvQAZCtC9ABhLEL0AH4tAvQAey4C9AB4LwL0AHUwAvQAcjEC9ABvMgL0AGwzAvQAaTQC9ABmNQL0AGM2AvQAYDcC9AB9N8L0AHo4wvQAdznC9AB0OsL0AHE7wvQAbjzC9ABrPcL0AGg-wvQAZT_C9ABiIMM0AH8hgzQAfCKDNAB5I4M0AHYkgzQAcyWDNABwJoM0AG0ngzQAaiiDNABnKYM0AGQqgzQAYSuDNAB-LEM0AHstQzQAeC5DNAB1L0M0AHIwQzQAbzFDNABsMkM0AGkzQzaAQYI2CcQhEM">
+  Open profile in ArcherBC2
+</a>
+
+<hr>
+
+<!-- ── Generate your own link ─────────────────────────────────────────── -->
+<h2>Generate a link from a .a7p file</h2>
+<p>
+  Pick any <code>.a7p</code> profile file — a shareable link is generated
+  locally in the browser (the file never leaves your machine).
+</p>
+
+<input type="file" id="fileInput" accept=".a7p">
+<div id="result" style="margin-top:1rem"></div>
+
+<hr>
+
+<!-- ── URL format ─────────────────────────────────────────────────────── -->
+<h2>URL format</h2>
+<pre><code>a7p://open?payload=&lt;URL-safe base64, no padding&gt;</code></pre>
+<p>
+  The payload is the raw binary content of a <code>.a7p</code> file encoded as
+  URL-safe base64 (RFC 4648 §5: <code>+</code>→<code>-</code>,
+  <code>/</code>→<code>_</code>, padding stripped).
+  Standard base64 with <code>%2B</code>/<code>%2F</code>/<code>%3D</code>
+  percent-encoding is also accepted.
+</p>
+
+<!-- ── Chrome tip ─────────────────────────────────────────────────────── -->
+<h2>Browser notes</h2>
+<ul>
+  <li><strong>Firefox / Safari</strong>: click the link above — a dialog will ask to open ArcherBC2.</li>
+  <li><strong>Chrome</strong>: typing <code>a7p://</code> in the address bar opens a search.
+      Always navigate via a clickable link on a page.</li>
+</ul>
+
+<script>
+document.getElementById('fileInput').addEventListener('change', function (e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (ev) {
+    const bytes = new Uint8Array(ev.target.result);
+
+    // Encode as URL-safe base64, no padding
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    const b64 = btoa(binary)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=/g, '');
+
+    const url = 'a7p://open?payload=' + b64;
+
+    document.getElementById('result').innerHTML =
+      '<p><strong>' + file.name + '</strong> — ' +
+      bytes.byteLength + ' bytes → ' + b64.length + ' base64 chars</p>' +
+      '<textarea rows="4">' + url + '</textarea><br>' +
+      '<a class="btn" href="' + url + '">Open in ArcherBC2</a>';
+  };
+  reader.readAsArrayBuffer(file);
+});
+</script>
+
+</body>
+</html>

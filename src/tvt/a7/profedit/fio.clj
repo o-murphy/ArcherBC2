@@ -473,14 +473,16 @@
       (string/replace "=" "")))
 
 
+(defn- parse-query-string [^String q]
+  (into {} (map #(let [[k v] (string/split % #"=" 2)] [k v])
+                (string/split q #"&"))))
+
+
 (defn- parse-a7p-url [^String url]
-  (let [uri (java.net.URI. url)
-        query (.getQuery uri)
-        params (when query
-                 (into {} (map #(let [[k v] (string/split % #"=" 2)] [k v])
-                               (string/split query #"&"))))]
-    {:action (.getHost uri)
-     :params params}))
+  (let [without-scheme (subs url (count "a7p://"))
+        [action-part query-part] (string/split without-scheme #"\?" 2)]
+    {:action action-part
+     :params (when query-part (parse-query-string query-part))}))
 
 
 (defn load-from-a7p-url! [*state ^String url]
@@ -500,4 +502,4 @@
                (do (prof/status-err! (j18n/resource ::bad-profile-file))
                    nil)))
            (prof/status-err! "a7p://open: missing payload"))
-         (prof/status-err! (str "a7p://: unknown action: " action))))))
+         (prof/status-err! (str "a7p://: unknown action: " action)))))))

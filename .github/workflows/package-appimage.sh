@@ -113,6 +113,24 @@ ln -sf "usr/share/icons/hicolor/256x256/apps/${APP_ID}.png" "$APPDIR/.DirIcon"
 cat > "$APPDIR/AppRun" <<'APPRUN'
 #!/bin/sh
 HERE="$(dirname "$(readlink -f "$0")")"
+
+# Auto-register a7p:// URL scheme handler after AppImage integration.
+# $APPIMAGE is set by the AppImage runtime to the path of the running .AppImage file.
+# We search for the desktop file that references it and register ourselves as
+# the default handler for x-scheme-handler/a7p (only when not already set).
+if [ -n "${APPIMAGE:-}" ] && [ -d "${HOME:-}/.local/share/applications" ]; then
+  _basename="$(basename "$APPIMAGE")"
+  _desktop="$(grep -rl "$_basename" "$HOME/.local/share/applications/" 2>/dev/null | head -1)"
+  if [ -n "$_desktop" ]; then
+    _id="$(basename "$_desktop")"
+    _current="$(xdg-settings get default-url-scheme-handler a7p 2>/dev/null)"
+    if [ "$_current" != "$_id" ]; then
+      xdg-mime default "$_id" x-scheme-handler/a7p 2>/dev/null || true
+      update-desktop-database "$HOME/.local/share/applications/" 2>/dev/null || true
+    fi
+  fi
+fi
+
 exec java -jar "$HERE/usr/share/archerbc2/profedit.jar" "$@"
 APPRUN
 chmod +x "$APPDIR/AppRun"
