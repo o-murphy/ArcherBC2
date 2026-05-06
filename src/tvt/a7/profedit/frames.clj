@@ -199,7 +199,7 @@
                :title (format "ArcherBC2 %s" (get-current-version))
                :icon (conf/key->icon :icon-frame)
                :id :frame-main
-               :on-close (if (System/getProperty "repl") :dispose :exit))
+               :on-close :nothing)
         frame-cons (partial make-frame-main *state wizard-cons content-cons)
         buttons (mapv #(sc/config! % :name "")
                       (mk-menu-file-items *state frame wizard-cons))
@@ -217,6 +217,12 @@
       (sc/config! fat-label :font conf/font-fat))
     (fio/add-current-fp-watcher :file-fp-watch
                                 (fn [_] (ball/regen-func-coefs! *state frame)))
+    (sc/listen frame :window-closing
+               (fn [_]
+                 (when-not (w/notify-if-state-dirty! *state frame)
+                   (if (System/getProperty "repl")
+                     (sc/dispose! frame)
+                     (System/exit 0)))))
     (sc/pack! frame)))
 
 
